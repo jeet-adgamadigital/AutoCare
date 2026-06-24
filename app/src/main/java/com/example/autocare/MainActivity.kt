@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.autocare.ui.features.auth.AuthScreen
+import com.example.autocare.ui.features.auth.AuthScreenViewModel
 import com.example.autocare.ui.features.splash.SplashScreen
 import com.example.autocare.ui.features.splash.SplashScreenViewModel
 import com.example.autocare.ui.navigation.NavRoutes
@@ -21,8 +23,11 @@ class MainActivity : ComponentActivity() {
         val container = (applicationContext as AutoCareApp).container
         val sessionManager = container.sessionManager
 
+        //Repositories
+        val authRepository = container.authRepository
         //Factory
         val splashFactory = SplashScreenViewModel.Factory(sessionManager)
+        val authFactory = AuthScreenViewModel.Factory(authRepository, sessionManager)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,11 +51,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<NavRoutes.Auth>{
-                        Box(
-                            modifier = Modifier.fillMaxSize()
-                        ){
-                            Text("Auth Screen")
-                        }
+                        AuthScreen(
+                            onNavigateToHome = {
+                                navController.navigate(NavRoutes.Home)
+                            },
+                            factory = authFactory
+                        )
                     }
 
                     composable<NavRoutes.Home> {
