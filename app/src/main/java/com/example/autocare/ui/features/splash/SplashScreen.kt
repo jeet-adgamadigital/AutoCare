@@ -1,4 +1,4 @@
-package com.example.autocare.ui.features
+package com.example.autocare.ui.features.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.autocare.R // Ensure you import your R file
+import com.example.autocare.ui.features.splash.SplashScreenViewModel
 import com.example.autocare.ui.theme.DarkBlueBackground
 import com.example.autocare.ui.theme.LightSubtext
 import com.example.autocare.ui.theme.OrangeAccent

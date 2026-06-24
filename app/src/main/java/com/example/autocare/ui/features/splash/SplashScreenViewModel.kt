@@ -1,4 +1,4 @@
-package com.example.autocare.ui.features
+package com.example.autocare.ui.features.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

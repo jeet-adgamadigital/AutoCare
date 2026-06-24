@@ -6,14 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.autocare.ui.features.SplashScreen
-import com.example.autocare.ui.features.SplashScreenViewModel
+import com.example.autocare.ui.features.splash.SplashScreen
+import com.example.autocare.ui.features.splash.SplashScreenViewModel
 import com.example.autocare.ui.navigation.NavRoutes
 import com.example.autocare.ui.theme.AutoCareTheme
 
