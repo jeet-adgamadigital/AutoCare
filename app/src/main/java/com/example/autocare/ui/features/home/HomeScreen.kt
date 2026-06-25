@@ -104,7 +104,7 @@ fun SuccessScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "✓",
+                    text = "Done",
                     color = OrangeAccent,
                     fontSize = 44.sp,
                     fontWeight = FontWeight.Bold
