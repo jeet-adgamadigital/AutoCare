@@ -1,6 +1,7 @@
 package com.example.autocare.ui.features.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -46,7 +47,7 @@ class HomeViewModel(
     private val _currentVehicleId = MutableStateFlow<Long?>(null)
     var currentVehicleId = _currentVehicleId.asStateFlow()
 
-    fun changeCurrentId(id : Long){
+    fun changeCurrentId(id: Long?){
         _currentVehicleId.value = id
     }
     val maintenanceLogs: StateFlow<List<MaintenanceLogs>> = _currentVehicleId
@@ -59,13 +60,15 @@ class HomeViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000), // Cleans up resources 5s after UI leaves screen
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
 
     fun changeState(state : HomeUiStates){
         _uiState.value = state
     }
+
+
 
     //Vehicle Add Mode methods
     fun onVehicleNameChange(name : String){
@@ -142,6 +145,57 @@ class HomeViewModel(
             initialValue = emptyList()
         )
 
+    // Log Properties
+    private val _serviceType = MutableStateFlow<String>("")
+    val serviceType = _serviceType.asStateFlow()
+
+    private val _date = MutableStateFlow<String>("")
+    val date = _date.asStateFlow()
+
+    private val _notes = MutableStateFlow<String>("")
+    val notes = _notes.asStateFlow()
+
+
+    //Log methods
+    fun onServiceTypeChange(service : String){
+        _serviceType.value = service
+    }
+
+    fun onDateChange(date : String){
+        _date.value = date
+    }
+
+    fun onNotesChange(notes : String){
+        _notes.value = notes
+    }
+
+    fun insertLog(vehicleId: Long, service: String, date: Long, notes: String) {
+        changeState(HomeUiStates.Loading)
+        viewModelScope.launch {
+            try {
+                val payload = MaintenanceLogs(
+                    associateVehicleId = vehicleId,
+                    type = service,
+                    notes = notes,
+                    date = date,
+                )
+                Log.d("log","${vehicleId}")
+                logsRepository.insertLogs(payload)
+                    .onSuccess {
+                        changeState(HomeUiStates.Success("Log Added Successfully"))
+                        delay(2000)
+                        changeState(HomeUiStates.ListMode)
+                    }
+                    .onFailure {
+                        Log.d("log","${payload.toString()}")
+                        changeState(HomeUiStates.Error("Could not enter a new Log"))
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                changeState(HomeUiStates.Error("An unexpected error occurred"))
+            }
+        }
+    }
 
 
     @Suppress("UNCHECKED_CAST")

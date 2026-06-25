@@ -11,4 +11,10 @@ class LogsRepository(
     fun getLogs(vehicleId : Long) : Flow<List<MaintenanceLogs>> {
         return dao.getLogsByVehicleId(vehicleId)
     }
+
+    suspend fun insertLogs(log : MaintenanceLogs) : Result<Long> {
+        return runCatching {
+            dao.insertLog(log)
+        }
+    }
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AppDao {
 
-    //Vehicle Qeuries
+    //Vehicle Queries
     @Query("SELECT * FROM vehicles")
     fun getAllVehicles() : Flow<List<VehicleEntity>>
 
@@ -33,4 +33,7 @@ interface AppDao {
     //Logs Queries
     @Query("SELECT * FROM maintenance_logs WHERE associateVehicleId = :vehicleId")
     fun getLogsByVehicleId(vehicleId : Long) : Flow<List<MaintenanceLogs>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLog(log : MaintenanceLogs) : Long
 }

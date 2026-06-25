@@ -1,6 +1,7 @@
 package com.example.autocare.ui.features.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,9 +63,22 @@ fun HomeScreen(
                         }
                     )
                 }
-                is HomeViewModel.HomeUiStates.AddLogsMode -> TODO()
+                is HomeViewModel.HomeUiStates.AddLogsMode -> {
+                    val vehicleId = state.vehicleId
+                    AddLogsMode(
+                        vehicleId = vehicleId,
+                        viewModel = viewModel
+                    )
+                }
                 is HomeViewModel.HomeUiStates.EditLogsMode -> TODO()
-                is HomeViewModel.HomeUiStates.Error -> TODO()
+                is HomeViewModel.HomeUiStates.Error -> {
+                    ErrorScreen(
+                        message = state.message,
+                        onDismiss = {
+                            viewModel.changeState(HomeViewModel.HomeUiStates.ListMode)
+                        }
+                    )
+                }
                 is HomeViewModel.HomeUiStates.VehicleEditMode -> {
                     val vehicle = state.vehicle
                     VehicleEditMode(
@@ -134,6 +149,72 @@ fun SuccessScreen(
                 fontSize = 15.sp,
                 textAlign = TextAlign.Center,
                 lineHeight = 22.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    message: String,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(DarkBlueBackground),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(32.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(90.dp)
+                    .background(color = Color(0xFFEF5350).copy(alpha = 0.15f), shape = CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "✕",
+                    color = Color(0xFFEF5350),
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            Text(
+                text = "Error Occurred",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = message,
+                color = Color(0xFFBACAD6),
+                fontSize = 15.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 22.sp
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                text = "Tap here to return to dashboard",
+                color = OrangeAccent,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier
+                    .clickable { onDismiss() }
+                    .padding(8.dp)
             )
         }
     }
