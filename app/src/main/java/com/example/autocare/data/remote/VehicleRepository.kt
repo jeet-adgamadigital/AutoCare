@@ -4,7 +4,7 @@ import com.example.autocare.data.model.VehicleEntity
 import com.example.autocare.data.room.AppDao
 import kotlinx.coroutines.flow.Flow
 
-class AppRepository(
+class VehicleRepository(
     private val dao : AppDao
 ) {
 
@@ -14,5 +14,11 @@ class AppRepository(
 
     fun getSearchedVehicles(query : String) : Flow<List<VehicleEntity>>{
         return dao.getSearchedVehicles(query)
+    }
+
+    suspend fun insertVehicle(vehicle : VehicleEntity) : Result<Long>{
+        return runCatching {
+            dao.insertVehicle(vehicle)
+        }
     }
 }

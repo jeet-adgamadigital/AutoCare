@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import com.example.autocare.data.remote.AppRepository
+import com.example.autocare.data.remote.VehicleRepository
 import com.example.autocare.data.remote.AuthRepository
 import com.example.autocare.data.remote.AuthRepositoryImplementation
 import com.example.autocare.data.room.AppDao
@@ -54,7 +54,7 @@ class AppContainer(val context : Context) {
         AuthRepositoryImplementation(supabaseClient)
     }
 
-    val appRepository : AppRepository by lazy {
-        AppRepository(dao)
+    val vehicleRepository : VehicleRepository by lazy {
+        VehicleRepository(dao)
     }
 }
