@@ -39,27 +39,12 @@ fun ListMode(
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val vehiclesList by viewModel.itemsList.collectAsStateWithLifecycle()
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = BackgroundGray, // Fixed: Setting this fills the bottom navigation region safely
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.changeState(HomeViewModel.HomeUiStates.AddVehicleMode) },
-                containerColor = DarkBlueCard,
-                contentColor = Color.White,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.navigationBarsPadding()
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Vehicle")
-            }
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(DarkBlueBackground) // Keeps header background dark
-                .padding(paddingValues)
-        ) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(DarkBlueBackground)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,7 +84,7 @@ fun ListMode(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .navigationBarsPadding() // Ensures list contents respect system gestures
+                        .navigationBarsPadding()
                         .padding(start = 24.dp, end = 24.dp, top = 24.dp)
                 ) {
                     TextField(
@@ -148,7 +133,7 @@ fun ListMode(
                         LazyColumn(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(bottom = 24.dp)
+                            contentPadding = PaddingValues(bottom = 80.dp)
                         ) {
                             items(
                                 items = vehiclesList,
@@ -157,7 +142,9 @@ fun ListMode(
                                 VehicleItemCard(
                                     vehicle = vehicle,
                                     onCardClick = {
-                                        viewModel.changeState(HomeViewModel.HomeUiStates.AddLogsMode(vehicle.vehicleId))
+                                        viewModel.changeCurrentId(vehicle.vehicleId)
+                                        viewModel.setVehicleInput(vehicle)
+                                        viewModel.changeState(HomeViewModel.HomeUiStates.VehicleEditMode(vehicle))
                                     }
                                 )
                             }
@@ -165,6 +152,19 @@ fun ListMode(
                     }
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = { viewModel.changeState(HomeViewModel.HomeUiStates.AddVehicleMode) },
+            containerColor = DarkBlueCard,
+            contentColor = Color.White,
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(bottom = 16.dp, end = 24.dp)
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Add Vehicle")
         }
     }
 }

@@ -12,6 +12,10 @@ class VehicleRepository(
         return dao.getAllVehicles()
     }
 
+    suspend fun getVehicleById(vehicleId : Long) : VehicleEntity{
+        return dao.getVehicleById(vehicleId)
+    }
+
     fun getSearchedVehicles(query : String) : Flow<List<VehicleEntity>>{
         return dao.getSearchedVehicles(query)
     }
@@ -19,6 +23,12 @@ class VehicleRepository(
     suspend fun insertVehicle(vehicle : VehicleEntity) : Result<Long>{
         return runCatching {
             dao.insertVehicle(vehicle)
+        }
+    }
+
+    suspend fun updateVehicle(vehicle: VehicleEntity): Result<Int> {
+        return runCatching {
+            dao.updateVehicle(vehicle)
         }
     }
 }

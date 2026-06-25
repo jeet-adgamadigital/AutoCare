@@ -23,11 +23,12 @@ class MainActivity : ComponentActivity() {
 
         //Repositories
         val authRepository = container.authRepository
-        val appRepository = container.vehicleRepository
+        val vehicleRepository = container.vehicleRepository
+        val logsRepository = container.logsRepository
         //Factory
         val splashFactory = SplashScreenViewModel.Factory(sessionManager)
         val authFactory = AuthScreenViewModel.Factory(authRepository, sessionManager)
-        val homeFactory = HomeViewModel.Factory(this.application,appRepository)
+        val homeFactory = HomeViewModel.Factory(this.application,vehicleRepository, logsRepository)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

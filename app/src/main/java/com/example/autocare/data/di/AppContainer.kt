@@ -8,6 +8,7 @@ import androidx.room.Room
 import com.example.autocare.data.remote.VehicleRepository
 import com.example.autocare.data.remote.AuthRepository
 import com.example.autocare.data.remote.AuthRepositoryImplementation
+import com.example.autocare.data.remote.LogsRepository
 import com.example.autocare.data.room.AppDao
 import com.example.autocare.data.room.AppDatabase
 import com.example.autocare.data.session.SessionManager
@@ -56,5 +57,9 @@ class AppContainer(val context : Context) {
 
     val vehicleRepository : VehicleRepository by lazy {
         VehicleRepository(dao)
+    }
+
+    val logsRepository : LogsRepository by lazy{
+        LogsRepository(dao)
     }
 }

@@ -33,6 +33,7 @@ fun VehicleAddMode(
             .fillMaxSize()
             .background(DarkBlueBackground)
     ) {
+        // App Bar Title Block
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,6 +58,7 @@ fun VehicleAddMode(
             )
         }
 
+        // Context Subtitle Description Text
         Text(
             text = "Input tracking properties to monitor oil levels, fuel efficiency metrics, and component modifications.",
             color = TextGray,
@@ -65,6 +67,7 @@ fun VehicleAddMode(
             lineHeight = 20.sp
         )
 
+        // Lower Rounded Panel containing Form Inputs and bottom-docked Action Button
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,6 +77,7 @@ fun VehicleAddMode(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .navigationBarsPadding()
                     .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {

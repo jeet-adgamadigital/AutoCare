@@ -64,7 +64,13 @@ fun HomeScreen(
                 is HomeViewModel.HomeUiStates.AddLogsMode -> TODO()
                 is HomeViewModel.HomeUiStates.EditLogsMode -> TODO()
                 is HomeViewModel.HomeUiStates.Error -> TODO()
-                is HomeViewModel.HomeUiStates.VehicleEditMode -> TODO()
+                is HomeViewModel.HomeUiStates.VehicleEditMode -> {
+                    val vehicle = state.vehicle
+                    VehicleEditMode(
+                        vehicle,
+                        viewModel
+                    )
+                }
                 HomeViewModel.HomeUiStates.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = OrangeAccent)
@@ -104,7 +110,7 @@ fun SuccessScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Done",
+                    text = "✓",
                     color = OrangeAccent,
                     fontSize = 44.sp,
                     fontWeight = FontWeight.Bold
