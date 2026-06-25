@@ -21,7 +21,7 @@ data class MaintenanceLogs(
     val associateVehicleId : Long,
     val type : String,
     val notes : String?,
-    val createdAt : Long = System.currentTimeMillis(),
+    val date : Long,
     val isCompleted : Boolean = false,
     val isSynced : Boolean = false
 )

@@ -13,6 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.autocare.ui.features.auth.AuthScreen
 import com.example.autocare.ui.features.auth.AuthScreenViewModel
+import com.example.autocare.ui.features.home.HomeScreen
+import com.example.autocare.ui.features.home.HomeViewModel
 import com.example.autocare.ui.features.splash.SplashScreen
 import com.example.autocare.ui.features.splash.SplashScreenViewModel
 import com.example.autocare.ui.navigation.NavRoutes
@@ -25,9 +27,11 @@ class MainActivity : ComponentActivity() {
 
         //Repositories
         val authRepository = container.authRepository
+        val appRepository = container.appRepository
         //Factory
         val splashFactory = SplashScreenViewModel.Factory(sessionManager)
         val authFactory = AuthScreenViewModel.Factory(authRepository, sessionManager)
+        val homeFactory = HomeViewModel.Factory(this.application,appRepository)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,11 +64,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<NavRoutes.Home> {
-                        Box(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text("Home Screen")
-                        }
+                        HomeScreen(
+                            onNavigateToSettings = {
+
+                            },
+                            factory = homeFactory
+                        )
                     }
                 }
             }

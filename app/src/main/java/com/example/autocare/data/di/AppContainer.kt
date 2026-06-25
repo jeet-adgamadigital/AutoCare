@@ -5,8 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.example.autocare.data.remote.AppRepository
 import com.example.autocare.data.remote.AuthRepository
 import com.example.autocare.data.remote.AuthRepositoryImplementation
+import com.example.autocare.data.room.AppDao
 import com.example.autocare.data.room.AppDatabase
 import com.example.autocare.data.session.SessionManager
 import io.github.jan.supabase.SupabaseClient
@@ -44,7 +46,15 @@ class AppContainer(val context : Context) {
             .build()
     }
 
+    val dao : AppDao by lazy{
+        database.dao()
+    }
+
     val authRepository : AuthRepository by lazy {
         AuthRepositoryImplementation(supabaseClient)
+    }
+
+    val appRepository : AppRepository by lazy {
+        AppRepository(dao)
     }
 }
