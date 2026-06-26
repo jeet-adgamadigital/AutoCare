@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SyncWorker(
-    context : Context,
-    workerParameter : WorkerParameters,
+    context: Context,
+    workerParameter: WorkerParameters,
     private val logsRepository: LogsRepository,
     private val vehicleRepository: VehicleRepository
 ) : CoroutineWorker(context, workerParameter){

@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ fun AddLogsMode(
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedTimestamp by remember { mutableStateOf<Long?>(null) }
     val datePickerState = rememberDatePickerState()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = vehicleId) {
         viewModel.changeCurrentId(vehicleId)
@@ -220,7 +222,8 @@ fun AddLogsMode(
                                 vehicleId = vehicleId,
                                 service = serviceType.trim(),
                                 date = currentTimestamp,
-                                notes = notes.trim()
+                                notes = notes.trim(),
+                                context
                             )
                         }
                     },

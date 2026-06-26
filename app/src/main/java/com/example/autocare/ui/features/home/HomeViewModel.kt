@@ -1,14 +1,22 @@
 package com.example.autocare.ui.features.home
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.autocare.data.model.MaintenanceLogs
 import com.example.autocare.data.model.VehicleEntity
 import com.example.autocare.data.remote.LogsRepository
 import com.example.autocare.data.remote.VehicleRepository
+import com.example.autocare.data.sync.SyncWorker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,7 +101,7 @@ class HomeViewModel(
         _vehicleRegNumber.value = vehicle.registrationNumber
     }
 
-    fun insertVehicle(vehicleName : String, vehicleNumber : String){
+    fun insertVehicle(vehicleName : String, vehicleNumber : String, context: Context){
         changeState(HomeUiStates.Loading)
         viewModelScope.launch {
             val payload = VehicleEntity(
@@ -102,6 +110,7 @@ class HomeViewModel(
             )
             vehicleRepository.insertVehicle(payload)
                 .onSuccess {
+                    triggerAutomaticSync(context)
                     changeState(HomeUiStates.Success("Vehicle Added Successfully"))
                     delay(2000)
                     changeState(HomeUiStates.ListMode)
@@ -112,7 +121,7 @@ class HomeViewModel(
         }
     }
 
-    fun updateVehicle(vehicle: VehicleEntity){
+    fun updateVehicle(vehicle: VehicleEntity, context: Context){
         changeState(HomeUiStates.Loading)
         viewModelScope.launch {
             val payload = VehicleEntity(
@@ -123,6 +132,7 @@ class HomeViewModel(
             )
             vehicleRepository.updateVehicle(payload)
                 .onSuccess {
+                    triggerAutomaticSync(context)
                     changeState(HomeUiStates.Success("Vehicle Added Successfully"))
                     delay(2000)
                     changeState(HomeUiStates.ListMode)
@@ -173,7 +183,7 @@ class HomeViewModel(
         _notes.value = notes
     }
 
-    fun insertLog(vehicleId: Long, service: String, date: Long, notes: String) {
+    fun insertLog(vehicleId: Long, service: String, date: Long, notes: String, context: Context) {
         changeState(HomeUiStates.Loading)
         viewModelScope.launch {
             try {
@@ -186,6 +196,7 @@ class HomeViewModel(
                 Log.d("log","${vehicleId}")
                 logsRepository.insertLogs(payload)
                     .onSuccess {
+                        triggerAutomaticSync(context)
                         changeState(HomeUiStates.Success("Log Added Successfully"))
                         delay(2000)
                         changeState(HomeUiStates.ListMode)
@@ -202,7 +213,7 @@ class HomeViewModel(
         }
     }
 
-    fun updateLog(logId : Long,vehicleId : Long,type : String, notes : String, date : Long, isCompleted : Boolean){
+    fun updateLog(logId : Long,vehicleId : Long,type : String, notes : String, date : Long, isCompleted : Boolean,context: Context){
         changeState(HomeUiStates.Loading)
         viewModelScope.launch {
             val payload = MaintenanceLogs(
@@ -216,6 +227,7 @@ class HomeViewModel(
             )
             logsRepository.updateLog(payload)
                 .onSuccess {
+                    triggerAutomaticSync(context)
                     changeState(HomeUiStates.Success("Log Updated Successfully"))
                     delay(2000)
                     changeState(HomeUiStates.ListMode)
@@ -238,6 +250,24 @@ class HomeViewModel(
         _serviceType.value = ""
         _date.value = ""
         _notes.value = ""
+    }
+
+    // Sync Trigger function
+    private fun triggerAutomaticSync(context : Context) {
+        val syncConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val syncWork = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(syncConstraints)
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "supabase_sync",
+            ExistingWorkPolicy.REPLACE,
+            syncWork
+        )
     }
 
 

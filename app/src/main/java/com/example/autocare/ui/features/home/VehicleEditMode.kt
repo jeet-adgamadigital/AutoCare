@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,7 +40,7 @@ fun VehicleEditMode(
     val vehicleName by viewModel.vehicleName.collectAsStateWithLifecycle()
     val vehicleNumber by viewModel.vehicleRegNumber.collectAsStateWithLifecycle()
     val maintenanceLogs by viewModel.maintenanceLogs.collectAsStateWithLifecycle(initialValue = emptyList())
-
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -147,7 +148,7 @@ fun VehicleEditMode(
                             Button(
                                 onClick = {
                                     if (vehicleName.isNotBlank() && vehicleNumber.isNotBlank()) {
-                                        viewModel.updateVehicle(vehicle)
+                                        viewModel.updateVehicle(vehicle, context)
                                     }
                                 },
                                 modifier = Modifier

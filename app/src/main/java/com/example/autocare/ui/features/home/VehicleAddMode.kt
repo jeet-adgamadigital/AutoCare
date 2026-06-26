@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ fun VehicleAddMode(
 ) {
     val vehicleName by viewModel.vehicleName.collectAsStateWithLifecycle()
     val vehicleRegNumber by viewModel.vehicleRegNumber.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -134,7 +136,7 @@ fun VehicleAddMode(
                 Button(
                     onClick = {
                         if (vehicleName.isNotBlank() && vehicleRegNumber.isNotBlank()) {
-                            viewModel.insertVehicle(vehicleName, vehicleRegNumber)
+                            viewModel.insertVehicle(vehicleName, vehicleRegNumber, context)
                         }
                     },
                     modifier = Modifier
