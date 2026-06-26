@@ -17,4 +17,10 @@ class LogsRepository(
             dao.insertLog(log)
         }
     }
+
+    suspend fun updateLog(log : MaintenanceLogs) : Result<Int> {
+        return runCatching {
+            dao.updateLogs(log)
+        }
+    }
 }

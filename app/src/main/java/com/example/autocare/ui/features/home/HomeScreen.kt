@@ -70,7 +70,13 @@ fun HomeScreen(
                         viewModel = viewModel
                     )
                 }
-                is HomeViewModel.HomeUiStates.EditLogsMode -> TODO()
+                is HomeViewModel.HomeUiStates.EditLogsMode -> {
+                    val log = state.log
+                    EditLogsMode(
+                        log = log,
+                        viewModel = viewModel
+                    )
+                }
                 is HomeViewModel.HomeUiStates.Error -> {
                     ErrorScreen(
                         message = state.message,

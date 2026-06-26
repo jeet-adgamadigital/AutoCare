@@ -75,7 +75,6 @@ fun VehicleEditMode(
                 lineHeight = 20.sp
             )
 
-            // Lower Body Content Panel
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,7 +157,7 @@ fun VehicleEditMode(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Update Settings & Specs", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                    Text("Update Vehicle Details", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
 
@@ -197,7 +196,11 @@ fun VehicleEditMode(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(14.dp),
                                 colors = CardDefaults.cardColors(containerColor = Color.White),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                                onClick = {
+                                    viewModel.setLogInput(log)
+                                    viewModel.changeState(HomeViewModel.HomeUiStates.EditLogsMode(log))
+                                }
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
                                     Row(

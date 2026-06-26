@@ -36,4 +36,8 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLog(log : MaintenanceLogs) : Long
+
+    @Update
+    suspend fun updateLogs(log : MaintenanceLogs) : Int
+
 }

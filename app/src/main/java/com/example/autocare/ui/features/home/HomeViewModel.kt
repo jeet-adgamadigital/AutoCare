@@ -194,7 +194,46 @@ class HomeViewModel(
                 e.printStackTrace()
                 changeState(HomeUiStates.Error("An unexpected error occurred"))
             }
+            clearLogInput()
         }
+    }
+
+    fun updateLog(logId : Long,vehicleId : Long,type : String, notes : String, date : Long, isCompleted : Boolean){
+        changeState(HomeUiStates.Loading)
+        viewModelScope.launch {
+            val payload = MaintenanceLogs(
+                id = logId,
+                associateVehicleId = vehicleId,
+                type = type,
+                notes = notes,
+                date = date,
+                isCompleted = isCompleted,
+                isSynced = false
+            )
+            logsRepository.updateLog(payload)
+                .onSuccess {
+                    changeState(HomeUiStates.Success("Log Updated Successfully"))
+                    delay(2000)
+                    changeState(HomeUiStates.ListMode)
+                }
+                .onFailure { throwable ->
+                    changeState(HomeUiStates.Error("$throwable"))
+                    Log.d("Log","$throwable")
+                }
+            clearLogInput()
+        }
+    }
+
+    fun setLogInput(log : MaintenanceLogs){
+        _serviceType.value = log.type
+        _date.value = log.date.toString()
+        _notes.value = log.notes?: ""
+    }
+
+    fun clearLogInput(){
+        _serviceType.value = ""
+        _date.value = ""
+        _notes.value = ""
     }
 
 
@@ -219,7 +258,7 @@ class HomeViewModel(
         object AddVehicleMode : HomeUiStates
         data class VehicleEditMode(val vehicle : VehicleEntity) : HomeUiStates
         data class AddLogsMode(val vehicleId : Long) : HomeUiStates
-        data class EditLogsMode(val logId : Long) : HomeUiStates
+        data class EditLogsMode(val log : MaintenanceLogs) : HomeUiStates
         data class Success(val message : String) : HomeUiStates
         data class Error(val message : String) : HomeUiStates
         object Loading : HomeUiStates
