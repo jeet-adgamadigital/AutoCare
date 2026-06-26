@@ -9,5 +9,5 @@ data class VehicleEntity(
     val vehicleId : Long = 0,
     val vehicleName : String,
     val registrationNumber : String,
-    val isSynced : Boolean = false
+    var isSynced : Boolean = false
 )

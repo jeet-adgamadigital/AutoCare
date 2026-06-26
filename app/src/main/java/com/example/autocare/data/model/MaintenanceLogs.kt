@@ -23,5 +23,5 @@ data class MaintenanceLogs(
     val notes : String?,
     val date : Long,
     val isCompleted : Boolean = false,
-    val isSynced : Boolean = false
+    var isSynced : Boolean = false
 )

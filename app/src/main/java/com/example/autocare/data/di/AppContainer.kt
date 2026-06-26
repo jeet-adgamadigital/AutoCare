@@ -56,10 +56,10 @@ class AppContainer(val context : Context) {
     }
 
     val vehicleRepository : VehicleRepository by lazy {
-        VehicleRepository(dao)
+        VehicleRepository(dao, supabaseClient)
     }
 
     val logsRepository : LogsRepository by lazy{
-        LogsRepository(dao)
+        LogsRepository(dao, supabaseClient)
     }
 }

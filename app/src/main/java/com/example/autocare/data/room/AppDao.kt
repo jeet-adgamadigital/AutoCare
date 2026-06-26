@@ -29,6 +29,9 @@ interface AppDao {
     @Update
     suspend fun updateVehicle(vehicle: VehicleEntity) : Int
 
+    @Query("SELECT * FROM vehicles where isSynced = 0")
+    suspend fun getUnsyncedVehicle() : List<VehicleEntity>
+
 
     //Logs Queries
     @Query("SELECT * FROM maintenance_logs WHERE associateVehicleId = :vehicleId")
@@ -42,5 +45,8 @@ interface AppDao {
 
     @Query("SELECT * FROM maintenance_logs")
     fun getAllLogs() : Flow<List<MaintenanceLogs>>
+
+    @Query("SELECT * FROM maintenance_logs WHERE isSynced= 0")
+    suspend fun getUnsyncedLogs() : List<MaintenanceLogs>
 
 }
