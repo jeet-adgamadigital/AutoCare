@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.autocare.data.model.VehicleEntity
 import com.example.autocare.ui.theme.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun VehicleEditMode(
@@ -30,6 +34,8 @@ fun VehicleEditMode(
     viewModel: HomeViewModel,
     modifier: Modifier = Modifier
 ) {
+    val dateFormatter = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+
     val vehicleName by viewModel.vehicleName.collectAsStateWithLifecycle()
     val vehicleNumber by viewModel.vehicleRegNumber.collectAsStateWithLifecycle()
     val maintenanceLogs by viewModel.maintenanceLogs.collectAsStateWithLifecycle(initialValue = emptyList())
@@ -215,7 +221,7 @@ fun VehicleEditMode(
                                             fontSize = 15.sp
                                         )
                                         Text(
-                                            text = log.date.toString(),
+                                            text = dateFormatter.format(Date(log.date)),
                                             color = TextGray,
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Medium

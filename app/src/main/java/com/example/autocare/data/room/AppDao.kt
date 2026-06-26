@@ -40,4 +40,7 @@ interface AppDao {
     @Update
     suspend fun updateLogs(log : MaintenanceLogs) : Int
 
+    @Query("SELECT * FROM maintenance_logs")
+    fun getAllLogs() : Flow<List<MaintenanceLogs>>
+
 }

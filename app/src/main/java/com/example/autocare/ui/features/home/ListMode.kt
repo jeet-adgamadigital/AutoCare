@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,9 @@ import com.example.autocare.ui.theme.DarkBlueBackground
 import com.example.autocare.ui.theme.DarkBlueCard
 import com.example.autocare.ui.theme.LightSubtext
 import com.example.autocare.ui.theme.TextGray
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +42,7 @@ fun ListMode(
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val vehiclesList by viewModel.itemsList.collectAsStateWithLifecycle()
+    val logs by viewModel.logs.collectAsStateWithLifecycle()
 
     Box(
         modifier = modifier
@@ -139,13 +144,34 @@ fun ListMode(
                                 items = vehiclesList,
                                 key = { vehicle -> vehicle.vehicleId }
                             ) { vehicle ->
+                                val vehicleLogs = remember(logs, vehicle.vehicleId){
+                                    logs.filter { it.associateVehicleId == vehicle.vehicleId }
+                                }
+                                val currentTime = remember { System.currentTimeMillis() }
+                                val lastServiceTimestamp = remember(vehicleLogs, currentTime) {
+                                    vehicleLogs
+                                        .filter { it.date <= currentTime }
+                                        .maxOfOrNull { it.date }
+                                }
+
+                                val nextServiceTimestamp = remember(vehicleLogs, currentTime) {
+                                    vehicleLogs
+                                        .filter { it.date > currentTime }
+                                        .minOfOrNull { it.date }
+                                }
                                 VehicleItemCard(
                                     vehicle = vehicle,
                                     onCardClick = {
                                         viewModel.changeCurrentId(vehicle.vehicleId)
                                         viewModel.setVehicleInput(vehicle)
-                                        viewModel.changeState(HomeViewModel.HomeUiStates.VehicleEditMode(vehicle))
-                                    }
+                                        viewModel.changeState(
+                                            HomeViewModel.HomeUiStates.VehicleEditMode(
+                                                vehicle
+                                            )
+                                        )
+                                    },
+                                    lastServiceDate = lastServiceTimestamp,
+                                    nextServiceDate = nextServiceTimestamp
                                 )
                             }
                         }
@@ -168,12 +194,15 @@ fun ListMode(
         }
     }
 }
-
 @Composable
 fun VehicleItemCard(
     vehicle: VehicleEntity,
+    lastServiceDate: Long?,
+    nextServiceDate: Long?,
     onCardClick: () -> Unit
 ) {
+    val dateFormatter = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -195,21 +224,43 @@ fun VehicleItemCard(
                     fontWeight = FontWeight.Bold,
                     color = DarkBlueCard
                 )
-                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = vehicle.registrationNumber.uppercase(),
                     fontSize = 13.sp,
                     color = TextGray,
                     fontWeight = FontWeight.Medium
                 )
-            }
 
-            Text(
-                text = "❯",
-                color = TextGray,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(end = 4.dp)
-            )
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(color = BackgroundGray, thickness = 1.dp)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text("LAST SERVICE", color = LightSubtext, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                        Text(
+                            text = lastServiceDate?.let { dateFormatter.format(Date(it)) } ?: "No logs registered",
+                            color = if (lastServiceDate != null) Color.Black else TextGray,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text("NEXT SERVICE", color = LightSubtext, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                        Text(
+                            text = nextServiceDate?.let { dateFormatter.format(Date(it)) } ?: "Pending log",
+                            color = if (nextServiceDate != null) DarkBlueCard else TextGray,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "❯", color = TextGray, fontSize = 16.sp)
         }
     }
 }

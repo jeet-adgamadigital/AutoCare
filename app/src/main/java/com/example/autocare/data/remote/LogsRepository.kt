@@ -8,6 +8,10 @@ class LogsRepository(
     private val dao: AppDao
 ) {
 
+    fun getAll() : Flow<List<MaintenanceLogs>> {
+        return dao.getAllLogs()
+    }
+
     fun getLogs(vehicleId : Long) : Flow<List<MaintenanceLogs>> {
         return dao.getLogsByVehicleId(vehicleId)
     }
