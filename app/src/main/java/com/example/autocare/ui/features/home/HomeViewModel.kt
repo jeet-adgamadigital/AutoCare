@@ -118,6 +118,7 @@ class HomeViewModel(
                 .onFailure {
                     changeState(HomeUiStates.Error("Could not enter a new vehicle"))
                 }
+            clearVehicleInput()
         }
     }
 
@@ -140,6 +141,7 @@ class HomeViewModel(
                 .onFailure {
                     changeState(HomeUiStates.Error("Could not enter a new vehicle"))
                 }
+            clearVehicleInput()
         }
     }
 

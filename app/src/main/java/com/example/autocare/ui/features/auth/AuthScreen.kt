@@ -85,7 +85,7 @@ fun AuthScreen(
                 .fillMaxWidth()
                 .weight(1f)
                 .background(
-                    color = Color(0xFFF5F6F8), // White-gray surface for forms
+                    color = Color(0xFFF5F6F8),
                     shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
                 )
                 .padding(horizontal = 24.dp, vertical = 24.dp)
@@ -95,8 +95,9 @@ fun AuthScreen(
                     if (uiState != selectedState) {
                         viewModel.clearInput()
                         if (selectedState == AuthScreenViewModel.AuthUiStates.SignIn) {
-                            viewModel.onMailChange("") // Forces clear and trigger
+                            viewModel.onMailChange("")
                         }
+                        viewModel.changeState(selectedState)
                     }
                 })
 

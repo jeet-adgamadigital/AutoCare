@@ -83,6 +83,11 @@ class AuthScreenViewModel(
         }
     }
 
+    fun changeState(state : AuthUiStates){
+        clearInput()
+        _uiState.value = state
+    }
+
     fun clearInput(){
         _email.value = ""
         _password.value = ""
