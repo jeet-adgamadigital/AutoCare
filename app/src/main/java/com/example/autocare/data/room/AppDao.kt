@@ -49,4 +49,7 @@ interface AppDao {
     @Query("SELECT * FROM maintenance_logs WHERE isSynced= 0")
     suspend fun getUnsyncedLogs() : List<MaintenanceLogs>
 
+    @Query("SELECT * FROM maintenance_logs WHERE date >= :startOfDay AND date <= :endOfDay AND isCompleted = 0")
+    suspend fun getPendingLogsForDay(startOfDay: Long, endOfDay: Long) : List<MaintenanceLogs>
+
 }
