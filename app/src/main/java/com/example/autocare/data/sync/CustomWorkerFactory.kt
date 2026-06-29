@@ -6,11 +6,13 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.example.autocare.data.remote.LogsRepository
 import com.example.autocare.data.remote.VehicleRepository
+import com.example.autocare.data.session.SessionManager
 import io.github.jan.supabase.SupabaseClient
 
 class CustomWorkerFactory(
     private val vehiclesRepository: VehicleRepository,
-    private val logsRepository: LogsRepository
+    private val logsRepository: LogsRepository,
+    private val sessionManager: SessionManager
 ) : WorkerFactory() {
 
     override fun createWorker(
@@ -33,7 +35,8 @@ class CustomWorkerFactory(
                     appContext,
                     workerParameters,
                     logsRepository,
-                    vehiclesRepository
+                    vehiclesRepository,
+                    sessionManager = sessionManager
                 )
             }
 

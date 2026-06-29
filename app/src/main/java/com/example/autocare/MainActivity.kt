@@ -11,6 +11,8 @@ import com.example.autocare.ui.features.auth.AuthScreen
 import com.example.autocare.ui.features.auth.AuthScreenViewModel
 import com.example.autocare.ui.features.home.HomeScreen
 import com.example.autocare.ui.features.home.HomeViewModel
+import com.example.autocare.ui.features.settings.SettingsScreen
+import com.example.autocare.ui.features.settings.SettingsScreenViewModel
 import com.example.autocare.ui.features.splash.SplashScreen
 import com.example.autocare.ui.features.splash.SplashScreenViewModel
 import com.example.autocare.ui.navigation.NavRoutes
@@ -29,7 +31,7 @@ class MainActivity : ComponentActivity() {
         val splashFactory = SplashScreenViewModel.Factory(sessionManager)
         val authFactory = AuthScreenViewModel.Factory(authRepository, sessionManager)
         val homeFactory = HomeViewModel.Factory(this.application,vehicleRepository, logsRepository)
-
+        val settingsFactory = SettingsScreenViewModel.Factory(sessionManager,vehicleRepository, authRepository)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -63,9 +65,21 @@ class MainActivity : ComponentActivity() {
                     composable<NavRoutes.Home> {
                         HomeScreen(
                             onNavigateToSettings = {
-
+                                navController.navigate(NavRoutes.Settings)
                             },
                             factory = homeFactory
+                        )
+                    }
+
+                    composable<NavRoutes.Settings>{
+                        SettingsScreen(
+                            onNavigateToHome = {
+                                navController.navigate(NavRoutes.Home)
+                            },
+                            onNavigateToSignUp = {
+                                navController.navigate(NavRoutes.Auth)
+                            },
+                            factory = settingsFactory
                         )
                     }
                 }

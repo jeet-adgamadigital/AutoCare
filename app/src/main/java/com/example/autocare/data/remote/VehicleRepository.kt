@@ -8,6 +8,8 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.forEach
 
 class VehicleRepository(
     private val dao : AppDao,
@@ -59,5 +61,16 @@ class VehicleRepository(
             e.printStackTrace()
         }
 
+    }
+
+    suspend fun deleteVehicle(id : Long){
+        dao.deleteVehicleById(id)
+    }
+
+    suspend fun deleteAllVehicle(){
+        val vehicles = dao.getAllVehicles().first()
+        vehicles.forEach { vehicleEntity ->
+            dao.deleteVehicleById(vehicleEntity.vehicleId)
+        }
     }
 }

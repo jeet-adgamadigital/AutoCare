@@ -29,8 +29,11 @@ interface AppDao {
     @Update
     suspend fun updateVehicle(vehicle: VehicleEntity) : Int
 
-    @Query("SELECT * FROM vehicles where isSynced = 0")
+    @Query("SELECT * FROM vehicles WHERE isSynced = 0")
     suspend fun getUnsyncedVehicle() : List<VehicleEntity>
+
+    @Query("DELETE FROM vehicles WHERE vehicleId = :id")
+    suspend fun deleteVehicleById(id : Long)
 
 
     //Logs Queries
@@ -51,5 +54,6 @@ interface AppDao {
 
     @Query("SELECT * FROM maintenance_logs WHERE date >= :startOfDay AND date <= :endOfDay AND isCompleted = 0")
     suspend fun getPendingLogsForDay(startOfDay: Long, endOfDay: Long) : List<MaintenanceLogs>
+
 
 }

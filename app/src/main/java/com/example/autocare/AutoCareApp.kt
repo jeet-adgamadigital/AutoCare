@@ -19,10 +19,11 @@ class AutoCareApp : Application() {
         container = AppContainer(this)
         val vehiclesRepo = (applicationContext as AutoCareApp).container.vehicleRepository
         val logsRepo = (applicationContext as AutoCareApp).container.logsRepository
+        val sessionManager = (applicationContext as AutoCareApp).container.sessionManager
 
         val customConfiguration = Configuration.Builder()
             .setWorkerFactory(CustomWorkerFactory(
-                vehiclesRepo, logsRepo
+                vehiclesRepo, logsRepo, sessionManager
             ))
             .build()
 

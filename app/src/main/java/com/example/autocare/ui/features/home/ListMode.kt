@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import java.util.Locale
 @Composable
 fun ListMode(
     viewModel: HomeViewModel,
+    onNavigateToSettings : () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -76,6 +78,16 @@ fun ListMode(
                         fontSize = 9.sp,
                         fontFamily = FontFamily.Monospace,
                         letterSpacing = 1.sp
+                    )
+                }
+                Spacer(modifier = Modifier.width(120.dp))
+                IconButton(
+                    onClick = onNavigateToSettings
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings",
+                        tint = Color.White
                     )
                 }
             }

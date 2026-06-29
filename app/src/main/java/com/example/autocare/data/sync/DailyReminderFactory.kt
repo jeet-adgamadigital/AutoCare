@@ -13,26 +13,32 @@ import com.example.autocare.R
 import com.example.autocare.data.model.MaintenanceLogs
 import com.example.autocare.data.remote.LogsRepository
 import com.example.autocare.data.remote.VehicleRepository
+import com.example.autocare.data.session.SessionManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class DailyReminderFactory(
     private val context: Context,
     workerParams: WorkerParameters,
     private val logsRepository: LogsRepository,
-    private val vehicleRepository: VehicleRepository
+    private val vehicleRepository: VehicleRepository,
+    private val sessionManager: SessionManager
 ) : CoroutineWorker(context, workerParams){
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result = withContext(Dispatchers.IO){
         try {
-            val pendingLogs = logsRepository.getPendingLogs()
-            Log.d("Notification", "Pending Logs ${pendingLogs}")
-            pendingLogs.forEach { logs ->
-                val vehicle = vehicleRepository.getVehicleById(logs.associateVehicleId)
-                sendNotification(logs, vehicle.vehicleName)
-                val completeLog = logs
-                completeLog.isCompleted = true
-                logsRepository.updateLog(completeLog)
+            val permission = sessionManager.isNotificationEnabled.first()
+            if (permission){
+                val pendingLogs = logsRepository.getPendingLogs()
+                Log.d("Notification", "Pending Logs ${pendingLogs}")
+                pendingLogs.forEach { logs ->
+                    val vehicle = vehicleRepository.getVehicleById(logs.associateVehicleId)
+                    sendNotification(logs, vehicle.vehicleName)
+                    val completeLog = logs
+                    completeLog.isCompleted = true
+                    logsRepository.updateLog(completeLog)
+                }
             }
             Result.success()
         } catch (e : Exception){

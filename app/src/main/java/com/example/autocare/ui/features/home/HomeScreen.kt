@@ -50,7 +50,7 @@ fun HomeScreen(
         ) {
             when (val state = uiState) {
                 HomeViewModel.HomeUiStates.ListMode -> {
-                    ListMode(viewModel = viewModel)
+                    ListMode(viewModel = viewModel, onNavigateToSettings)
                 }
                 HomeViewModel.HomeUiStates.AddVehicleMode -> {
                     VehicleAddMode(viewModel = viewModel)

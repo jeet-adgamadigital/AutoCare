@@ -12,4 +12,7 @@ sealed interface NavRoutes {
 
     @Serializable
     object Home : NavRoutes
+
+    @Serializable
+    object Settings : NavRoutes
 }
