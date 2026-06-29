@@ -10,8 +10,7 @@ import io.github.jan.supabase.SupabaseClient
 
 class CustomWorkerFactory(
     private val vehiclesRepository: VehicleRepository,
-    private val logsRepository: LogsRepository,
-    private val supabaseClient: SupabaseClient
+    private val logsRepository: LogsRepository
 ) : WorkerFactory() {
 
     override fun createWorker(
@@ -22,12 +21,22 @@ class CustomWorkerFactory(
         return when (workerClassName) {
             SyncWorker::class.java.name -> {
                 SyncWorker(
-                    context = appContext,
-                    workerParameter = workerParameters,
-                    vehicleRepository = vehiclesRepository,
-                    logsRepository = logsRepository,
+                    appContext,
+                    workerParameters,
+                    logsRepository,
+                    vehiclesRepository
                 )
             }
+
+            DailyReminderFactory::class.java.name -> {
+                DailyReminderFactory(
+                    appContext,
+                    workerParameters,
+                    logsRepository,
+                    vehiclesRepository
+                )
+            }
+
             else -> null
         }
     }
